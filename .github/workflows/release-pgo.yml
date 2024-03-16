@@ -44,7 +44,8 @@ jobs:
           components: llvm-tools-preview
       - run: cargo install cargo-pgo
       - uses: taiki-e/install-action@just
-      - run: just pgo '--target ${{ matrix.target }} ${{ matrix.additional_args }}' || true
+      - run: just pgo '--target ${{ matrix.target }} ${{ matrix.additional_args }}'
+        continue-on-error: true
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v1-release
         with:

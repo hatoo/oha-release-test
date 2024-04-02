@@ -1,9 +1,9 @@
 import { $ } from "bun";
 
-let additional = "";
+let additional = [];
 
 if (Bun.argv.length >= 3) {
-    additional = Bun.argv[2];
+    additional = Bun.argv.slice(2);
 }
 
 let server = null;

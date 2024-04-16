@@ -661,16 +661,11 @@ fn system_resolv_conf() -> anyhow::Result<(ResolverConfig, ResolverOpts)> {
     // check if we are running in termux https://github.com/termux/termux-app
     #[cfg(unix)]
     if env::var("TERMUX_VERSION").is_ok() {
-        if let Ok(resolv_conf) = (|| {
-            let path = env::var("PREFIX")?;
-            let path = format!("{}/etc/resolv.conf", path);
-            let conf_data =
-                std::fs::read(&path).context(format!("DNS: failed to load {}", path))?;
-            hickory_resolver::system_conf::parse_resolv_conf(&conf_data)
-                .context(format!("DNS: failed to parse {}", path))
-        })() {
-            return Ok(resolv_conf);
-        }
+        let path = env::var("PREFIX")?;
+        let path = format!("{}/etc/resolv.conf", path);
+        let conf_data = std::fs::read(&path).context(format!("DNS: failed to load {}", path))?;
+        return hickory_resolver::system_conf::parse_resolv_conf(conf_data)
+            .context(format!("DNS: failed to parse {}", path));
     }
 
     hickory_resolver::system_conf::read_system_conf()
